@@ -1,9 +1,9 @@
 class Cell:
     def __init__(self):
         self.adjCount = 0
-        self.isMined = false
-        self.isMarked = false
-        self.isCovered = true
+        self.isMined = False
+        self.isMarked = False
+        self.isCovered = True
 
     def get_count(self):
         return self.adjCount
@@ -13,22 +13,22 @@ class Cell:
     def get_mine(self):
         return self.isMined
     def set_mine(self, isMined):
-        self.isMined = true
+        self.isMined = True
 
     def get_mark(self):
         return self.isMarked
     def toggle_mark(self):
         if not self.isCovered:
-            return false
+            return False
         self.isMarked = not self.isMarked
-        return true
+        return True
 
     def get_cover(self):
         return self.isCovered
 
     def uncover(self):
         if self.isMarked or not self.isCovered:
-            return false
+            return False
         self.isCovered = false
-        return true
+        return True
 
