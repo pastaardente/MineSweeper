@@ -9,7 +9,7 @@ class Cell:
     def adjCount(self):
         return self.__adjCount
     
-    @__adjCount.setter
+    @adjCount.setter
     def adjCount(self, adjCount):
         self.__adjCount = adjCount
 
@@ -17,11 +17,11 @@ class Cell:
     def isMined(self):
         return self.__isMined
     
-    @__isMined.setter
+    @isMined.setter
     def isMined(self, isMined):
         self.__isMined = True
         
-   @property 
+   
     def isMarked(self):
         return self.__isMarked
     
@@ -31,7 +31,7 @@ class Cell:
         self.__isMarked = not self.__isMarked
         return True
     
-   @property
+   
     def isCovered(self):
         return self.__isCovered
 
