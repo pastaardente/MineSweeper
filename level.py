@@ -22,6 +22,30 @@ class Level:
                 else:
                     self.__board[x][y].setCount(-1)
 
+    def mark(self, x, y):
+        return
+
+    def reveal(self, x, y):
+        return
+
+    def __autoReveal(self, x, y):
+        return
+
+    def uncoverAll(self):
+        return
+
+    def allMinesMarked(self):
+        return False
+
+    def allUnminedRevealed(self):
+        return False
+
+    def boundsCheck(self, x, y):
+        return True
+
+    def getBoard(self):
+        return __board, __length, __width
+
     def __getAdjMineCount(self, x, y):
         count = 0
         for i in range(-1, 2):
