@@ -1,4 +1,4 @@
-import cell
+# import cell
 
 class Level:
     def __init__(self, width, height, mineCount):
@@ -23,25 +23,35 @@ class Level:
                     self.__board[x][y].setCount(-1)
 
     def mark(self, x, y):
-        return
+        if boundsCheck(x, y):
+            __board[x][y].togglemark()
 
     def reveal(self, x, y):
-        return
+        if boundsCheck(x, y):
+            __board[x][y].uncover()
 
     def __autoReveal(self, x, y):
+
         return
 
     def uncoverAll(self):
-        return
+        for cell in __board:
+            cell.uncover()
 
     def allMinesMarked(self):
-        return False
+        for cell in __board:
+            if cell.isMined() and cell.isMarked() is False:
+                return False
+        return True
 
     def allUnminedRevealed(self):
-        return False
+        for cell in __board:
+            if cell.isMined() is False and cell.isCovered() is False:
+                return False
+        return True
 
     def boundsCheck(self, x, y):
-        return True
+        return x >= 0 and y >= 0 and x < __width and y < __height
 
     def getBoard(self):
         return __board, __length, __width
@@ -52,7 +62,7 @@ class Level:
             for j in range(-1, 2):
                 adj = self.__getAdjCell(x, y, i, j)
                 if adj is not None and adj.getMine():
-                    count++
+                    count += 1
         return count
 
     def __getAdjCell(self, x, y, i, j):
