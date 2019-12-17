@@ -5,20 +5,16 @@ class Cell:
         self.__isMarked = False
         self.__isCovered = True
 
-    @property
     def adjCount(self):
         return self.__adjCount
     
-    @adjCount.setter
-    def adjCount(self, adjCount):
+    def setCount(self, adjCount):
         self.__adjCount = adjCount
 
-    @property
     def isMined(self):
         return self.__isMined
     
-    @isMined.setter
-    def isMined(self, isMined):
+    def setMine(self):
         self.__isMined = True
         
    
@@ -38,7 +34,7 @@ class Cell:
     def uncover(self):
         if self.__isMarked or not self.__isCovered:
             return False
-        self.__isCovered = false
+        self.__isCovered = False
         return True
     
     # toString override 
