@@ -2,51 +2,56 @@ import random
 import cell
 
 class Level:
-    def __init__(self, width, height, mineCount):
-        # create board of size width * height
-        self.__board = [ [cell.Cell()] * height ] * width
-        self.__width = width
-        self.__height = height
+    # board is inverted
+    def __init__(self, size, mineCount):
+        self.__board = dict()
+        self.__width = size
+        self.__height = size
         self.__mineCount = mineCount
 
-        for c in self.__board:
-            c = cell.Cell()
+        for x in range(0, self.__width):
+            for y in range(0, self.__height):
+                self.__board.update({ (x, y) : cell.Cell() })
 
         # populate board with mines
         while mineCount > 0:
             x = random.randrange(self.__width)
             y = random.randrange(self.__height)
-            self.__board[x][y].setMine()
-            mineCount -= 1
+            self.__board[(x, y)].setMine()
+            if (self.__board[(x, y)].isMined()):
+                mineCount -= 1
 
         # calculate mine counts
-        for x in range(0, width):
-            for y in range(0, height):
-                if self.__board[x][y].isMined():
-                    self.__board[x][y].setCount(self.__getAdjMineCount(x, y))
+        for x in range(0, self.__width):
+            for y in range(0, self.__height):
+                if not self.__board[(x, y)].isMined():
+                    self.__board[(x, y)].setCount(self.__getAdjMineCount(x, y))
                 else:
-                    self.__board[x][y].setCount(-1)
+                    self.__board[(x, y)].setCount(-1)
 
-    def mark(self, x, y):
+    def mark(self, y, x):
         if self.boundsCheck(x, y):
-            self.__board[x][y].togglemark()
-            return self.__board[x][y].isMarked()
+            self.__board[(x, y)].togglemark()
+            return self.__board[(x, y)].isMarked()
 
-    def reveal(self, x, y):
+    def reveal(self, y, x):
         if self.boundsCheck(x, y):
-            if self.__board[x][y].uncover():
-                return self.__board[x][y].isMined()
+            if not self.__board[(x, y)].isMarked():
+                result = self.__board[(x, y)].isMined()
+                self.__autoReveal(x, y)
+                return result
         return False
 
     def __autoReveal(self, x, y):
         # out of bounds base case
         if self.boundsCheck(x, y) is False:
             return
-        wasRevealed = self.__board[x][y].uncover()
-        count = self.__board[x][y].adjCount()
+
+        wasRevealed = self.__board[(x, y)].uncover()
+        count = self.__board[(x, y)].adjCount()
 
         # numbered or marked cell base case
-        if count != 0 and wasRevealed is False:
+        if count != 0 or wasRevealed is False:
             return
         
         for i in range(-1, 2):
@@ -62,7 +67,7 @@ class Level:
         for x in range(0, self.__width):
             output += '\t' + str(x) + "| "
             for y in range(0, self.__height):
-                output += str(self.__board[x][y]) + " "
+                output += str(self.__board[(x, y)]) + " "
             output += "| " + str(x) + '\n'
 
         output += "\t   "
@@ -70,35 +75,31 @@ class Level:
             output += str(x) + ' '
 
         markCount = 0
-        for line in self.__board:
-            for cell in line:
-                if cell.isMarked(): markCount += 1
+        for _, cell in self.__board.items():
+            if cell.isMarked(): markCount += 1
 
         output += "\n\tStatus: " + str(markCount) + '/' + str(self.__mineCount)
         return output
 
 
     def uncoverAll(self):
-        for line in self.__board:
-            for cell in line:
-                cell.uncover()
+        for _, cell in self.__board.items():
+            cell.uncover()
 
     def allMinesMarked(self):
-        for line in self.__board:
-            for cell in line:
-                if (cell.isMined() and (cell.isMarked() is False)):
-                    return False
+        for _, cell in self.__board.items():
+            if (cell.isMined() is not cell.isMarked()):
+                return False
         return True
 
     def allUnminedRevealed(self):
-        for line in self.__board:
-            for cell in line:
-                if ((cell.isMined() is False) and (cell.isCovered() is False)):
-                    return False
+        for _, cell in self.__board.items():
+            if ((cell.isMined() is False) and (cell.isCovered())):
+                return False
         return True
 
     def boundsCheck(self, x, y):
-        return x >= 0 and y >= 0 and x < self.__width and y < self.__height
+        return (x >= 0 and y >= 0 and x < self.__width and y < self.__height)
 
     def getBoard(self):
         return self.__board, self.__length, self.__width
@@ -117,4 +118,4 @@ class Level:
         y += j
         if x < 0 or x >= self.__width or y < 0 or y >= self.__height:
             return None
-        return self.__board[x][y]
+        return self.__board[(x, y)]

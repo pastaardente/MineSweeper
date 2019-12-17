@@ -22,10 +22,11 @@ class Cell:
         return self.__isMarked
     
     def togglemark(self):
-        if not self.__isCovered:
+        if self.__isCovered:
+            self.__isMarked = not self.__isMarked
+            return True
+        else:
             return False
-        self.__isMarked = not self.__isMarked
-        return True
     
    
     def isCovered(self):
@@ -48,4 +49,4 @@ class Cell:
         elif self.__adjCount == 0:
             return "_"
         else:
-            return self.__adjCount
+            return str(self.__adjCount)
